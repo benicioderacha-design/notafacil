@@ -16,3 +16,4 @@ setInterval(function () {
 	showTime();
 }, 1000);
 alert(Object.keys(localStorage).join(", "));
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
