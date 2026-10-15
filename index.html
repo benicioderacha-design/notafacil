@@ -1,0 +1,1492 @@
+<!DOCTYPE html><html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NotaFácil</title><style>
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --fundo: #071426;
+    --painel: #0d2038;
+    --painel2: #122944;
+    --borda: #244565;
+    --texto: #f0f6ff;
+    --suave: #a9bfdc;
+    --destaque: #38e0b5;
+}
+
+body {
+    margin: 0;
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: Arial, sans-serif;
+}
+
+header {
+    padding: 22px 18px;
+    background: linear-gradient(120deg, #102b49, #0b1a30);
+}
+
+header h1 {
+    margin: 0;
+    color: var(--destaque);
+    font-size: 32px;
+}
+
+header p {
+    margin: 7px 0 0;
+    color: var(--suave);
+}
+
+nav {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    overflow-x: auto;
+    background: #0a192d;
+}
+
+nav button {
+    flex: 1;
+    min-width: 105px;
+    padding: 13px 10px;
+    background: var(--painel2);
+    color: var(--texto);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+nav button.ativo {
+    background: var(--destaque);
+    color: #06251f;
+    font-weight: bold;
+}
+
+main {
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+    padding: 14px;
+}
+
+.tela {
+    display: none;
+}
+
+.tela.ativa {
+    display: block;
+}
+
+.painel {
+    background: var(--painel);
+    border: 1px solid var(--borda);
+    border-radius: 13px;
+    padding: 16px;
+    margin-bottom: 14px;
+    min-width: 0;
+}
+
+h2 {
+    color: var(--destaque);
+    margin-top: 0;
+}
+
+h3 {
+    margin-top: 0;
+}
+
+p {
+    line-height: 1.5;
+}
+
+input, select, textarea {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 7px 0 13px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: #102741;
+    color: white;
+    font-size: 15px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 75px;
+}
+
+button {
+    font-family: inherit;
+}
+
+.botao {
+    padding: 11px 14px;
+    background: var(--destaque);
+    color: #06251f;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.botao.secundario {
+    background: var(--painel2);
+    border: 1px solid var(--borda);
+    color: var(--texto);
+}
+
+.botao.perigo {
+    background: #9d354a;
+    color: white;
+}
+
+.botao.pequeno {
+    padding: 8px 10px;
+    margin: 3px;
+}
+
+.linha {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.linha > * {
+    flex: 1;
+}
+
+.cartoes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+    gap: 12px;
+}
+
+.cartao {
+    padding: 17px;
+    background: var(--painel2);
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+}
+
+.cartao strong {
+    display: block;
+    font-size: 25px;
+    color: var(--destaque);
+    margin-top: 10px;
+}
+
+.item {
+    padding: 13px 0;
+    border-bottom: 1px solid var(--borda);
+    overflow-wrap: anywhere;
+}
+
+.item:last-child {
+    border-bottom: none;
+}
+
+.muted {
+    color: var(--suave);
+    font-size: 14px;
+}
+
+.vazio {
+    color: var(--suave);
+    text-align: center;
+    padding: 18px 5px;
+}
+
+.barra {
+    height: 10px;
+    background: #203750;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.barra div {
+    height: 100%;
+    background: var(--destaque);
+}
+
+.destaque {
+    color: var(--destaque);
+    font-weight: bold;
+}
+
+.grade-calendario {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    border-top: 1px solid var(--borda);
+    border-left: 1px solid var(--borda);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dia-semana {
+    text-align: center;
+    padding: 10px 0;
+    background: #122944;
+    color: var(--suave);
+    font-size: 12px;
+    border-right: 1px solid var(--borda);
+    border-bottom: 1px solid var(--borda);
+}
+
+.dia {
+    min-width: 0;
+    min-height: 66px;
+    padding: 7px 2px;
+    border-right: 1px solid var(--borda);
+    border-bottom: 1px solid var(--borda);
+    background: #0b1b30;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+
+.dia:hover {
+    background: #193752;
+}
+
+.dia.outro-mes {
+    color: #617b9b;
+}
+
+.dia.selecionado {
+    background: #086f60;
+    outline: 2px solid var(--destaque);
+    outline-offset: -2px;
+}
+
+.dia.hoje .numero {
+    border: 1px solid var(--destaque);
+    border-radius: 50%;
+    padding: 4px;
+}
+
+.numero {
+    display: inline-block;
+    font-size: 14px;
+}
+
+.marcadores {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    margin-top: 7px;
+    min-height: 7px;
+}
+
+.marcador {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.cor-prova {
+    background: #ffba37;
+}
+
+.cor-trabalho {
+    background: #b36bff;
+}
+
+.cor-apresentacao {
+    background: #329fff;
+}
+
+.cor-evento {
+    background: #32d9ad;
+}
+
+.cor-feriado {
+    background: #ff596d;
+}
+
+.tag {
+    display: inline-block;
+    border-radius: 20px;
+    padding: 5px 9px;
+    color: #081629;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 3px 0;
+}
+
+.tag-prova {
+    background: #ffba37;
+}
+
+.tag-trabalho {
+    background: #b36bff;
+}
+
+.tag-apresentacao {
+    background: #329fff;
+}
+
+.tag-evento {
+    background: #32d9ad;
+}
+
+.tag-feriado {
+    background: #ff596d;
+}
+
+.evento-data {
+    display: inline-block;
+    text-align: center;
+    background: #13584f;
+    border-radius: 8px;
+    padding: 9px;
+    min-width: 53px;
+    margin-right: 8px;
+}
+
+.evento-data strong {
+    display: block;
+    font-size: 21px;
+}
+
+.evento-conteudo {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: calc(100% - 75px);
+}
+
+#fotoPerfil {
+    width: 85px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: none;
+    margin: 10px 0;
+    border: 2px solid var(--destaque);
+}
+
+footer {
+    text-align: center;
+    color: var(--suave);
+    padding: 20px 10px;
+    font-size: 13px;
+}
+
+@media (min-width: 850px) {
+    .layout-calendario {
+        display: grid;
+        grid-template-columns: 1.8fr 1fr;
+        gap: 14px;
+        align-items: start;
+    }
+}
+
+@media (max-width: 420px) {
+    header h1 {
+        font-size: 27px;
+    }
+
+    main {
+        padding: 9px;
+    }
+
+    .painel {
+        padding: 11px;
+    }
+
+    .dia {
+        min-height: 53px;
+    }
+
+    .dia-semana {
+        font-size: 10px;
+    }
+
+    .numero {
+        font-size: 12px;
+    }
+}
+</style></head><body><header>
+    <h1>📚 NotaFácil</h1>
+    <p>Organize sua vida escolar</p>
+</header><nav>
+    <button class="ativo" onclick="mostrarTela('inicio',this)">🏠 Início</button>
+    <button onclick="mostrarTela('boletim',this)">📖 Boletim</button>
+    <button onclick="mostrarTela('horarios',this)">🕒 Horários</button>
+    <button onclick="mostrarTela('desempenho',this)">📊 Desempenho</button>
+    <button onclick="mostrarTela('calendario',this)">📅 Calendário</button>
+    <button onclick="mostrarTela('perfil',this)">👤 Perfil</button>
+</nav><main><section id="inicio" class="tela ativa">
+    <div class="painel">
+        <h2>Olá! 👋</h2>
+        <p>Bem-vindo ao NotaFácil. Organize suas notas, aulas e compromissos escolares em um só lugar.</p>
+        <div class="cartoes">
+            <div class="cartao">📚 Matérias<strong id="totalMaterias">0</strong></div>
+            <div class="cartao">📅 Eventos<strong id="totalEventos">0</strong></div>
+            <div class="cartao">🕒 Aulas cadastradas<strong id="totalAulas">0</strong></div>
+        </div>
+    </div><div class="painel">
+    <h2>📌 Próximos compromissos</h2>
+    <div id="inicioEventos"></div>
+</div>
+
+<div class="painel">
+    <h2>📊 Resumo das notas</h2>
+    <p>Média geral: <strong id="mediaInicio" class="destaque">--</strong></p>
+    <button class="botao" onclick="mostrarTela('boletim')">Abrir boletim</button>
+</div>
+
+</section><section id="boletim" class="tela">
+    <div class="painel">
+        <h2>📖 Boletim escolar</h2>
+        <p class="muted">A média é calculada usando AV1, AV2 e AV3. A média desejada é 7.</p>    <form id="formMateria">
+        <label>Nome da matéria</label>
+        <input id="nomeMateria" placeholder="Ex.: Matemática" required>
+
+        <div class="linha">
+            <div>
+                <label>AV1</label>
+                <input id="av1" type="number" min="0" max="10" step="0.1" required>
+            </div>
+            <div>
+                <label>AV2</label>
+                <input id="av2" type="number" min="0" max="10" step="0.1" required>
+            </div>
+            <div>
+                <label>AV3</label>
+                <input id="av3" type="number" min="0" max="10" step="0.1" required>
+            </div>
+        </div>
+
+        <button class="botao" type="submit" id="salvarMateria">Adicionar matéria</button>
+        <button class="botao secundario" type="button" id="cancelarMateria" onclick="cancelarEdicaoMateria()" hidden>Cancelar edição</button>
+    </form>
+</div>
+
+<div class="painel">
+    <h2>Minhas matérias</h2>
+    <div id="listaMaterias"></div>
+</div>
+
+</section><section id="horarios" class="tela">
+    <div class="painel">
+        <h2>🕒 Horários das aulas</h2>    <form id="formAula">
+        <label>Nome da matéria</label>
+        <input id="nomeAula" placeholder="Ex.: Ciências" required>
+
+        <label>Dia da semana</label>
+        <select id="diaAula" required>
+            <option value="1">Segunda-feira</option>
+            <option value="2">Terça-feira</option>
+            <option value="3">Quarta-feira</option>
+            <option value="4">Quinta-feira</option>
+            <option value="5">Sexta-feira</option>
+            <option value="6">Sábado</option>
+            <option value="0">Domingo</option>
+        </select>
+
+        <div class="linha">
+            <div>
+                <label>Início</label>
+                <input id="inicioAula" type="time" required>
+            </div>
+            <div>
+                <label>Fim</label>
+                <input id="fimAula" type="time" required>
+            </div>
+        </div>
+
+        <button class="botao" type="submit" id="salvarAula">Adicionar aula</button>
+        <button class="botao secundario" type="button" id="cancelarAula" onclick="cancelarEdicaoAula()" hidden>Cancelar edição</button>
+    </form>
+</div>
+
+<div class="painel">
+    <h2>Minha semana</h2>
+    <div id="listaAulas"></div>
+</div>
+
+</section><section id="desempenho" class="tela">
+    <div class="painel">
+        <h2>📊 Meu desempenho</h2>    <div class="cartoes">
+        <div class="cartao">Média geral<strong id="mediaGeral">--</strong></div>
+        <div class="cartao">Na média<strong id="materiasBoas">0</strong></div>
+        <div class="cartao">Abaixo de 7<strong id="materiasRuins">0</strong></div>
+    </div>
+</div>
+
+<div class="painel">
+    <h2>Notas por matéria</h2>
+    <div id="desempenhoLista"></div>
+</div>
+
+</section><section id="calendario" class="tela">
+    <div class="painel">
+        <h2>📅 Calendário escolar</h2>
+        <p>Organize suas provas, trabalhos, apresentações, eventos e feriados.</p>
+    </div><div class="layout-calendario">
+    <div>
+        <div class="painel">
+            <div class="linha">
+                <button class="botao secundario" onclick="mudarMes(-1)">❮</button>
+                <h3 id="tituloMes" style="text-align:center;margin:10px 0">Calendário</h3>
+                <button class="botao secundario" onclick="mudarMes(1)">❯</button>
+            </div>
+
+            <button class="botao secundario" onclick="irParaHoje()">Ir para hoje</button>
+
+            <div class="grade-calendario" id="gradeCalendario" style="margin-top:15px"></div>
+        </div>
+
+        <div class="painel">
+            <h3>📌 Eventos do dia</h3>
+            <p class="muted" id="dataSelecionada"></p>
+            <div id="eventosDoDia"></div>
+        </div>
+
+        <div class="painel">
+            <h3>🗓️ Próximos eventos</h3>
+            <div id="proximosEventos"></div>
+        </div>
+    </div>
+
+    <div>
+        <div class="painel">
+            <h2 id="tituloFormularioEvento">➕ Adicionar evento</h2>
+
+            <form id="formEvento">
+                <label>Título do evento</label>
+                <input id="tituloEvento" placeholder="Ex.: Prova de Matemática" required maxlength="100">
+
+                <label>Categoria</label>
+                <select id="categoriaEvento">
+                    <option value="prova">🟡 Prova</option>
+                    <option value="trabalho">🟣 Trabalho</option>
+                    <option value="apresentacao">🔵 Apresentação</option>
+                    <option value="evento">🟢 Evento</option>
+                    <option value="feriado">🔴 Feriado</option>
+                </select>
+
+                <label>Data</label>
+                <input id="dataEvento" type="date" required>
+
+                <label>Horário (opcional)</label>
+                <input id="horaEvento" type="time">
+
+                <label>Descrição (opcional)</label>
+                <textarea id="descricaoEvento" placeholder="Detalhes sobre o evento..."></textarea>
+
+                <button class="botao" type="submit" id="salvarEvento">Salvar evento</button>
+                <button class="botao secundario" type="button" onclick="cancelarEdicaoEvento()" id="cancelarEvento" hidden>Cancelar edição</button>
+            </form>
+        </div>
+
+        <div class="painel">
+            <h3>🎨 Categorias</h3>
+            <p><span class="marcador cor-prova"></span> Provas</p>
+            <p><span class="marcador cor-trabalho"></span> Trabalhos</p>
+            <p><span class="marcador cor-apresentacao"></span> Apresentações</p>
+            <p><span class="marcador cor-evento"></span> Eventos</p>
+            <p><span class="marcador cor-feriado"></span> Feriados</p>
+        </div>
+    </div>
+</div>
+
+</section><section id="perfil" class="tela">
+    <div class="painel">
+        <h2>👤 Meu perfil</h2>    <img id="fotoPerfil" alt="Foto do perfil">
+
+    <label>Foto do perfil (opcional)</label>
+    <input id="arquivoFoto" type="file" accept="image/*">
+
+    <label>Nome</label>
+    <input id="perfilNome" placeholder="Seu nome">
+
+    <label>Ano escolar</label>
+    <select id="perfilAno">
+        <option>6º ano</option>
+        <option>7º ano</option>
+        <option>8º ano</option>
+        <option>9º ano</option>
+        <option>1º ano do Ensino Médio</option>
+        <option>2º ano do Ensino Médio</option>
+        <option>3º ano do Ensino Médio</option>
+        <option>Outro</option>
+    </select>
+
+    <label>Turma</label>
+    <input id="perfilTurma" placeholder="Ex.: 6º A">
+
+    <label>Cor de destaque</label>
+    <input id="perfilCor" type="color" value="#38e0b5">
+
+    <button class="botao" onclick="salvarPerfil()">Salvar perfil</button>
+</div>
+
+<div class="painel">
+    <h3>💾 Sobre seus dados</h3>
+    <p class="muted">As informações ficam salvas neste navegador do seu dispositivo. Limpar os dados do navegador pode apagar suas informações. Esta versão ainda não possui contas online nem sincronização entre dispositivos.</p>
+</div>
+
+</section></main><footer>NotaFácil • Seu companheiro nos estudos 📚</footer><script>
+const CHAVE_MATERIAS = "notafacil_materias";
+const CHAVE_HORARIOS = "notafacil_horarios";
+const CHAVE_PERFIL = "notafacil_perfil";
+const CHAVE_EVENTOS = "notafacil_eventos";
+
+function carregar(chave) {
+    try {
+        const valor = localStorage.getItem(chave);
+        return valor ? JSON.parse(valor) : [];
+    } catch (erro) {
+        return [];
+    }
+}
+
+function guardar(chave, dados) {
+    try {
+        localStorage.setItem(chave, JSON.stringify(dados));
+        return true;
+    } catch (erro) {
+        alert("Não foi possível salvar. O armazenamento pode estar cheio.");
+        return false;
+    }
+}
+
+let materias = carregar(CHAVE_MATERIAS);
+let aulas = carregar(CHAVE_HORARIOS);
+let eventos = carregar(CHAVE_EVENTOS);
+let perfil = carregar(CHAVE_PERFIL);
+
+window.obterDadosNotaFacil = function () {
+  return {
+    materias: JSON.parse(localStorage.getItem("materias")) || [],
+    notas: JSON.parse(localStorage.getItem("notas")) || [],
+    horarios: JSON.parse(localStorage.getItem("horarios")) || [],
+    eventos: JSON.parse(localStorage.getItem("eventos")) || []
+  };
+};
+
+window.aplicarDadosNotaFacil = function (dados) {
+  if (!dados) return;
+  localStorage.setItem("materias", JSON.stringify(dados.materias || []));
+  localStorage.setItem("notas", JSON.stringify(dados.notas || []));
+  localStorage.setItem("horarios", JSON.stringify(dados.horarios || []));
+  localStorage.setItem("eventos", JSON.stringify(dados.eventos || []));
+  // depois, chame aqui a função que redesenha a tela
+};
+if (!Array.isArray(materias)) materias = [];
+if (!Array.isArray(aulas)) aulas = [];
+if (!Array.isArray(eventos)) eventos = [];
+if (!perfil || Array.isArray(perfil)) perfil = {};
+
+let editandoMateria = -1;
+let editandoAula = -1;
+let editandoEvento = -1;
+
+const nomesDias = [
+    "Domingo",
+    "Segunda-feira",
+    "Terça-feira",
+    "Quarta-feira",
+    "Quinta-feira",
+    "Sexta-feira",
+    "Sábado"
+];
+
+const nomesMeses = [
+    "Janeiro", "Fevereiro", "Março", "Abril",
+    "Maio", "Junho", "Julho", "Agosto",
+    "Setembro", "Outubro", "Novembro", "Dezembro"
+];
+
+const categorias = {
+    prova: {nome:"Prova", classe:"prova"},
+    trabalho: {nome:"Trabalho", classe:"trabalho"},
+    apresentacao: {nome:"Apresentação", classe:"apresentacao"},
+    evento: {nome:"Evento", classe:"evento"},
+    feriado: {nome:"Feriado", classe:"feriado"}
+};
+
+function escapar(texto) {
+    return String(texto ?? "").replace(/[&<>"']/g, function(letra) {
+        return {
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#39;"
+        }[letra];
+    });
+}
+
+function mostrarTela(id, botao) {
+    document.querySelectorAll(".tela").forEach(function(tela) {
+        tela.classList.remove("ativa");
+    });
+
+    document.getElementById(id).classList.add("ativa");
+
+    document.querySelectorAll("nav button").forEach(function(b) {
+        b.classList.remove("ativo");
+    });
+
+    if (botao) {
+        botao.classList.add("ativo");
+    } else {
+        document.querySelectorAll("nav button").forEach(function(b) {
+            if (b.getAttribute("onclick").includes("'" + id + "'")) {
+                b.classList.add("ativo");
+            }
+        });
+    }
+
+    atualizarTudo();
+}
+
+function salvarMaterias() {
+    guardar(CHAVE_MATERIAS, materias);
+    atualizarTudo();
+}
+
+function mediaMateria(materia) {
+    return (Number(materia.av1) + Number(materia.av2) + Number(materia.av3)) / 3;
+}
+
+function notaValida(valor) {
+    return valor !== "" && Number.isFinite(Number(valor)) &&
+           Number(valor) >= 0 && Number(valor) <= 10;
+}
+
+document.getElementById("formMateria").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const nome = document.getElementById("nomeMateria").value.trim();
+    const av1 = document.getElementById("av1").value;
+    const av2 = document.getElementById("av2").value;
+    const av3 = document.getElementById("av3").value;
+
+    if (!nome || !notaValida(av1) || !notaValida(av2) || !notaValida(av3)) {
+        alert("Preencha a matéria e notas de 0 a 10.");
+        return;
+    }
+
+    const materia = {
+        nome: nome,
+        av1: Number(av1),
+        av2: Number(av2),
+        av3: Number(av3)
+    };
+
+    if (editandoMateria >= 0) {
+        materias[editandoMateria] = materia;
+    } else {
+        materias.push(materia);
+    }
+
+    guardar(CHAVE_MATERIAS, materias);
+    cancelarEdicaoMateria();
+    atualizarTudo();
+});
+
+function editarMateria(i) {
+    const m = materias[i];
+    if (!m) return;
+
+    editandoMateria = i;
+
+    document.getElementById("nomeMateria").value = m.nome;
+    document.getElementById("av1").value = m.av1;
+    document.getElementById("av2").value = m.av2;
+    document.getElementById("av3").value = m.av3;
+
+    document.getElementById("salvarMateria").textContent = "Salvar alterações";
+    document.getElementById("cancelarMateria").hidden = false;
+
+    mostrarTela("boletim");
+    document.getElementById("nomeMateria").focus();
+}
+
+function cancelarEdicaoMateria() {
+    editandoMateria = -1;
+    document.getElementById("formMateria").reset();
+    document.getElementById("salvarMateria").textContent = "Adicionar matéria";
+    document.getElementById("cancelarMateria").hidden = true;
+}
+
+function excluirMateria(i) {
+    if (!confirm("Deseja excluir esta matéria?")) return;
+
+    materias.splice(i, 1);
+    guardar(CHAVE_MATERIAS, materias);
+    cancelarEdicaoMateria();
+    atualizarTudo();
+}
+
+function renderMaterias() {
+    const lista = document.getElementById("listaMaterias");
+
+    if (materias.length === 0) {
+        lista.innerHTML = '<p class="vazio">Nenhuma matéria cadastrada ainda.</p>';
+        return;
+    }
+
+    lista.innerHTML = materias.map(function(m, i) {
+  const media = mediaMateria(m);
+        const falta = Math.max(0, 7 - media);
+
+        return `
+        <div class="item">
+            <h3>${escapar(m.nome)}</h3>
+            <p class="muted">AV1: ${m.av1} • AV2: ${m.av2} • AV3: ${m.av3}</p>
+            <p>Média: <strong class="${media >= 7 ? 'destaque' : ''}">${media.toFixed(1)}</strong></p>
+            <p class="muted">${media >= 7 ? 'Você atingiu a média! 🎉' : 'Faltam ' + falta.toFixed(1) + ' pontos na média para chegar a 7.'}</p>
+            <div class="linha">
+                <button class="botao pequeno" onclick="editarMateria(${i})">✏️ Editar</button>
+                <button class="botao perigo pequeno" onclick="excluirMateria(${i})">🗑️ Excluir</button>
+            </div>
+        </div>`;
+    }).join("");
+}
+
+document.getElementById("formAula").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const nome = document.getElementById("nomeAula").value.trim();
+    const dia = document.getElementById("diaAula").value;
+    const inicio = document.getElementById("inicioAula").value;
+    const fim = document.getElementById("fimAula").value;
+
+    if (!nome || !inicio || !fim || fim <= inicio) {
+        alert("Informe a matéria e horários válidos. O fim deve ser depois do início.");
+        return;
+    }
+
+    const aula = {nome:nome, dia:dia, inicio:inicio, fim:fim};
+
+    if (editandoAula >= 0) {
+        aulas[editandoAula] = aula;
+    } else {
+        aulas.push(aula);
+    }
+
+    guardar(CHAVE_HORARIOS, aulas);
+    cancelarEdicaoAula();
+    atualizarTudo();
+});
+
+function editarAula(i) {
+    const a = aulas[i];
+    if (!a) return;
+
+    editandoAula = i;
+    document.getElementById("nomeAula").value = a.nome;
+    document.getElementById("diaAula").value = a.dia;
+    document.getElementById("inicioAula").value = a.inicio;
+    document.getElementById("fimAula").value = a.fim;
+    document.getElementById("salvarAula").textContent = "Salvar alterações";
+    document.getElementById("cancelarAula").hidden = false;
+
+    mostrarTela("horarios");
+    document.getElementById("nomeAula").focus();
+}
+
+function cancelarEdicaoAula() {
+    editandoAula = -1;
+    document.getElementById("formAula").reset();
+    document.getElementById("salvarAula").textContent = "Adicionar aula";
+    document.getElementById("cancelarAula").hidden = true;
+}
+
+function excluirAula(i) {
+    if (!confirm("Deseja excluir esta aula?")) return;
+
+    aulas.splice(i, 1);
+    guardar(CHAVE_HORARIOS, aulas);
+    cancelarEdicaoAula();
+    atualizarTudo();
+}
+
+function renderAulas() {
+    const lista = document.getElementById("listaAulas");
+
+    const ordenadas = aulas.map(function(a, i) {
+        return {...a, indiceOriginal:i};
+    }).sort(function(a, b) {
+        const diaA = Number(a.dia);
+        const diaB = Number(b.dia);
+
+        const ordemA = diaA === 0 ? 7 : diaA;
+        const ordemB = diaB === 0 ? 7 : diaB;
+
+        return ordemA - ordemB || a.inicio.localeCompare(b.inicio);
+    });
+
+    if (ordenadas.length === 0) {
+        lista.innerHTML = '<p class="vazio">Nenhum horário cadastrado.</p>';
+        return;
+    }
+
+    lista.innerHTML = ordenadas.map(function(a) {
+        return `
+        <div class="item">
+            <strong>${escapar(a.nome)}</strong>
+            <p class="muted">${nomesDias[Number(a.dia)]} • ${escapar(a.inicio)} às ${escapar(a.fim)}</p>
+            <button class="botao pequeno" onclick="editarAula(${a.indiceOriginal})">✏️ Editar</button>
+            <button class="botao perigo pequeno" onclick="excluirAula(${a.indiceOriginal})">🗑️ Excluir</button>
+        </div>`;
+    }).join("");
+}
+
+function dataLocal(data) {
+    return data.getFullYear() + "-" +
+        String(data.getMonth() + 1).padStart(2, "0") + "-" +
+        String(data.getDate()).padStart(2, "0");
+}
+
+function formatarData(texto) {
+    if (!texto) return "";
+
+    const partes = texto.split("-");
+    if (partes.length !== 3) return texto;
+
+    return partes[2] + "/" + partes[1] + "/" + partes[0];
+}
+
+function dataEventoValida(texto) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(texto)) return false;
+
+    const partes = texto.split("-").map(Number);
+    const data = new Date(partes[0], partes[1] - 1, partes[2]);
+
+    return data.getFullYear() === partes[0] &&
+        data.getMonth() === partes[1] - 1 &&
+        data.getDate() === partes[2];
+}
+
+function dataParaOrdenar(texto) {
+    return texto || "9999-12-31";
+}
+
+function classeCategoria(categoria) {
+    return categorias[categoria] ? categorias[categoria].classe : "evento";
+}
+
+function nomeCategoria(categoria) {
+    return categorias[categoria] ? categorias[categoria].nome : "Evento";
+}
+
+function salvarEventos() {
+    guardar(CHAVE_EVENTOS, eventos);
+    atualizarTudo();
+}
+
+document.getElementById("formEvento").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const titulo = document.getElementById("tituloEvento").value.trim();
+    const categoria = document.getElementById("categoriaEvento").value;
+    const data = document.getElementById("dataEvento").value;
+    const hora = document.getElementById("horaEvento").value;
+    const descricao = document.getElementById("descricaoEvento").value.trim();
+
+    if (!titulo || !dataEventoValida(data)) {
+        alert("Informe um título e uma data válida.");
+        return;
+    }
+
+    const evento = {
+        titulo: titulo,
+        categoria: categoria,
+        data: data,
+        hora: hora,
+        descricao: descricao
+    };
+
+    if (editandoEvento >= 0) {
+        eventos[editandoEvento] = evento;
+    } else {
+        eventos.push(evento);
+    }
+
+    guardar(CHAVE_EVENTOS, eventos);
+
+    dataSelecionadaAtual = data;
+    const partes = data.split("-").map(Number);
+    mesAtual = new Date(partes[0], partes[1] - 1, 1);
+
+    cancelarEdicaoEvento();
+    atualizarTudo();
+});
+
+function editarEvento(i) {
+    const ev = eventos[i];
+    if (!ev) return;
+
+    editandoEvento = i;
+
+    document.getElementById("tituloEvento").value = ev.titulo;
+    document.getElementById("categoriaEvento").value = ev.categoria;
+    document.getElementById("dataEvento").value = ev.data;
+    document.getElementById("horaEvento").value = ev.hora || "";
+    document.getElementById("descricaoEvento").value = ev.descricao || "";
+
+    document.getElementById("tituloFormularioEvento").textContent = "✏️ Editar evento";
+    document.getElementById("salvarEvento").textContent = "Salvar alterações";
+    document.getElementById("cancelarEvento").hidden = false;
+
+    mostrarTela("calendario");
+    document.getElementById("tituloEvento").focus();
+}
+
+function cancelarEdicaoEvento() {
+    editandoEvento = -1;
+    document.getElementById("formEvento").reset();
+    document.getElementById("tituloFormularioEvento").textContent = "➕ Adicionar evento";
+    document.getElementById("salvarEvento").textContent = "Salvar evento";
+    document.getElementById("cancelarEvento").hidden = true;
+}
+
+function excluirEvento(i) {
+    if (!confirm("Deseja excluir este evento?")) return;
+
+    eventos.splice(i, 1);
+
+    guardar(CHAVE_EVENTOS, eventos);
+
+    if (editandoEvento === i) {
+        cancelarEdicaoEvento();
+    } else if (editandoEvento > i) {
+        editandoEvento--;
+    }
+
+    atualizarTudo();
+}
+
+let hoje = new Date();
+let mesAtual = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+let dataSelecionadaAtual = dataLocal(hoje);
+
+document.getElementById("dataEvento").value = dataSelecionadaAtual;
+
+function mudarMes(diferenca) {
+    mesAtual = new Date(
+        mesAtual.getFullYear(),
+        mesAtual.getMonth() + diferenca,
+        1
+    );
+
+    renderCalendario();
+}
+
+function irParaHoje() {
+    const agora = new Date();
+
+    mesAtual = new Date(agora.getFullYear(), agora.getMonth(), 1);
+    dataSelecionadaAtual = dataLocal(agora);
+
+    renderCalendario();
+}
+
+function selecionarDia(texto) {
+    dataSelecionadaAtual = texto;
+    document.getElementById("dataEvento").value = texto;
+    renderCalendario();
+}
+
+function renderCalendario() {
+    const grade = document.getElementById("gradeCalendario");
+
+    document.getElementById("tituloMes").textContent =
+        nomesMeses[mesAtual.getMonth()] + " de " + mesAtual.getFullYear();
+
+    const cabecalhos = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+
+    let html = cabecalhos.map(function(dia) {
+        return '<div class="dia-semana">' + dia + '</div>';
+    }).join("");
+
+    const primeiroDia = new Date(
+        mesAtual.getFullYear(),
+        mesAtual.getMonth(),
+        1
+    );
+
+    let inicio = (primeiroDia.getDay() + 6) % 7;
+
+    const dataInicio = new Date(
+        mesAtual.getFullYear(),
+        mesAtual.getMonth(),
+        1 - inicio
+    );
+
+    const agora = new Date();
+    const hojeTexto = dataLocal(agora);
+
+    for (let i = 0; i < 42; i++) {
+        const data = new Date(
+            dataInicio.getFullYear(),
+            dataInicio.getMonth(),
+            dataInicio.getDate() + i
+        );
+
+        const texto = dataLocal(data);
+
+        const doMes = data.getMonth() === mesAtual.getMonth();
+        const selecionado = texto === dataSelecionadaAtual;
+        const ehHoje = texto === hojeTexto;
+
+        const eventosDia = eventos.filter(function(ev) {
+            return ev.data === texto;
+        });
+
+        const classes = [
+            "dia",
+            doMes ? "" : "outro-mes",
+            selecionado ? "selecionado" : "",
+            ehHoje ? "hoje" : ""
+        ].filter(Boolean).join(" ");
+
+        const marcadores = eventosDia.slice(0, 4).map(function(ev) {
+            return '<span class="marcador cor-' +
+                classeCategoria(ev.categoria) + '"></span>';
+        }).join("");
+
+        html += `
+        <button type="button" class="${classes}" onclick="selecionarDia('${texto}')">
+            <span class="numero">${data.getDate()}</span>
+            <span class="marcadores">${marcadores}</span>
+        </button>`;
+    }
+
+    grade.innerHTML = html;
+
+    renderEventosDoDia();
+    renderProximosEventos();
+}
+
+function cartaoEvento(ev, i) {
+    const categoria = classeCategoria(ev.categoria);
+
+    return `
+    <div class="item">
+        <span class="evento-data">
+            <strong>${Number(ev.data.split("-")[2])}</strong>
+            ${escapar(nomesMeses[Number(ev.data.split("-")[1]) - 1].slice(0,3))}
+        </span>
+
+        <span class="evento-conteudo">
+            <strong>${escapar(ev.titulo)}</strong><br>
+            <span class="tag tag-${categoria}">${nomeCategoria(ev.categoria)}</span><br>
+            <span class="muted">${ev.hora ? escapar(ev.hora) : "Dia inteiro"}</span>
+            ${ev.descricao ? '<br><span class="muted">' + escapar(ev.descricao) + '</span>' : ''}
+        </span>
+
+        <div style="margin-top:8px">
+            <button class="botao pequeno" onclick="editarEvento(${i})">✏️ Editar</button>
+            <button class="botao perigo pequeno" onclick="excluirEvento(${i})">🗑️ Excluir</button>
+        </div>
+    </div>`;
+}
+
+function renderEventosDoDia() {
+    const caixa = document.getElementById("eventosDoDia");
+
+    document.getElementById("dataSelecionada").textContent =
+        formatarData(dataSelecionadaAtual);
+
+    const encontrados = eventos.map(function(ev, i) {
+        return {...ev, indiceOriginal:i};
+    }).filter(function(ev) {
+        return ev.data === dataSelecionadaAtual;
+    }).sort(function(a,b) {
+        return (a.hora || "00:00").localeCompare(b.hora || "00:00");
+    });
+
+    if (encontrados.length === 0) {
+        caixa.innerHTML = '<p class="vazio">Nenhum evento neste dia. Se quiser, adicione um!</p>';
+        return;
+    }
+
+    caixa.innerHTML = encontrados.map(function(ev) {
+        return cartaoEvento(ev, ev.indiceOriginal);
+    }).join("");
+}
+
+function renderProximosEventos() {
+    const caixa = document.getElementById("proximosEventos");
+
+    const lista = eventos.map(function(ev, i) {
+        return {...ev, indiceOriginal:i};
+    }).filter(function(ev) {
+        return ev.data >= dataLocal(new Date());
+    }).sort(function(a,b) {
+        return dataParaOrdenar(a.data).localeCompare(dataParaOrdenar(b.data)) ||
+            (a.hora || "00:00").localeCompare(b.hora || "00:00");
+    }).slice(0, 10);
+
+    if (lista.length === 0) {
+        caixa.innerHTML = '<p class="vazio">Nenhum compromisso futuro cadastrado.</p>';
+        return;
+    }
+
+    caixa.innerHTML = lista.map(function(ev) {
+        return '<p class="muted">' + formatarData(ev.data) + '</p>' +
+            cartaoEvento(ev, ev.indiceOriginal);
+    }).join("");
+}
+
+function salvarPerfil() {
+    perfil.nome = document.getElementById("perfilNome").value.trim();
+    perfil.ano = document.getElementById("perfilAno").value;
+    perfil.turma = document.getElementById("perfilTurma").value.trim();
+    perfil.cor = document.getElementById("perfilCor").value;
+
+    if (!guardar(CHAVE_PERFIL, perfil)) return;
+
+    aplicarPerfil();
+    alert("Perfil salvo!");
+}
+
+function aplicarPerfil() {
+    document.getElementById("perfilNome").value = perfil.nome || "";
+    document.getElementById("perfilAno").value = perfil.ano || "6º ano";
+    document.getElementById("perfilTurma").value = perfil.turma || "";
+    document.getElementById("perfilCor").value = perfil.cor || "#38e0b5";
+
+    document.documentElement.style.setProperty(
+        "--destaque",
+        perfil.cor || "#38e0b5"
+    );
+
+    const foto = document.getElementById("fotoPerfil");
+
+    if (perfil.foto) {
+        foto.src = perfil.foto;
+        foto.style.display = "block";
+    } else {
+        foto.removeAttribute("src");
+        foto.style.display = "none";
+    }
+}
+
+document.getElementById("arquivoFoto").addEventListener("change", function(e) {
+    const arquivo = e.target.files[0];
+    if (!arquivo) return;
+
+    if (!arquivo.type.startsWith("image/")) {
+        alert("Escolha um arquivo de imagem.");
+        return;
+    }
+
+    if (arquivo.size > 1500000) {
+        alert("A imagem é muito grande. Escolha uma imagem menor que 1,5 MB.");
+        e.target.value = "";
+        return;
+    }
+
+    const leitor = new FileReader();
+
+    leitor.onload = function() {
+        perfil.foto = leitor.result;
+
+        if (guardar(CHAVE_PERFIL, perfil)) {
+            aplicarPerfil();
+        }
+    };
+
+    leitor.readAsDataURL(arquivo);
+});
+
+function atualizarDesempenho() {
+    const medias = materias.map(mediaMateria);
+
+    const media = medias.length
+        ? medias.reduce(function(total, n) { return total + n; }, 0) / medias.length
+        : null;
+
+    document.getElementById("mediaGeral").textContent =
+        media === null ? "--" : media.toFixed(1);
+
+    document.getElementById("mediaInicio").textContent =
+        media === null ? "--" : media.toFixed(1);
+
+    document.getElementById("materiasBoas").textContent =
+        medias.filter(function(n) { return n >= 7; }).length;
+
+    document.getElementById("materiasRuins").textContent =
+        medias.filter(function(n) { return n < 7; }).length;
+
+    const lista = document.getElementById("desempenhoLista");
+
+    if (materias.length === 0) {
+        lista.innerHTML = '<p class="vazio">Cadastre matérias para ver seu desempenho.</p>';
+        return;
+    }
+
+    lista.innerHTML = materias.map(function(m) {
+        const n = mediaMateria(m);
+        const porcentagem = Math.max(0, Math.min(100, n * 10));
+
+        return `
+        <div class="item">
+            <strong>${escapar(m.nome)}</strong>
+            <span style="float:right">${n.toFixed(1)}/10</span>
+            <div class="barra"><div style="width:${porcentagem}%"></div></div>
+            <p class="muted">${n >= 7 ? 'Média atingida!' : 'Continue estudando para alcançar 7.'}</p>
+        </div>`;
+    }).join("");
+}
+
+function atualizarInicio() {
+    document.getElementById("totalMaterias").textContent = materias.length;
+    document.getElementById("totalEventos").textContent = eventos.length;
+    document.getElementById("totalAulas").textContent = aulas.length;
+
+    const caixa = document.getElementById("inicioEventos");
+
+    const proximos = eventos.filter(function(ev) {
+        return ev.data >= dataLocal(new Date());
+    }).sort(function(a,b) {
+        return a.data.localeCompare(b.data) ||
+            (a.hora || "00:00").localeCompare(b.hora || "00:00");
+    }).slice(0, 5);
+
+    if (proximos.length === 0) {
+        caixa.innerHTML = '<p class="vazio">Você ainda não tem compromissos cadastrados.</p>';
+        return;
+    }
+
+    caixa.innerHTML = proximos.map(function(ev) {
+        return `
+        <div class="item">
+            <strong>${escapar(ev.titulo)}</strong>
+            <p class="muted">${formatarData(ev.data)} • ${escapar(nomeCategoria(ev.categoria))} • ${ev.hora ? escapar(ev.hora) : "Dia inteiro"}</p>
+        </div>`;
+    }).join("");
+}
+
+function atualizarTudo() {
+    renderMaterias();
+    renderAulas();
+    renderCalendario();
+    atualizarDesempenho();
+    atualizarInicio();
+}
+
+aplicarPerfil();
+atualizarTudo();
+</script>
+<script type="module" src="firebase.js"></script>
+</body>
+<script type="module">
+window.salvarTudoNaNuvem = async function() {
+    const usuario = auth.currentUser;
+    if (!usuario) return;
+
+    await salvarDadosNaNuvem(usuario, {
+        materias,
+        aulas,
+        eventos,
+        perfil
+    });
+};
+import { auth, db } from "./firebase.js";
+import {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const telaLogin = document.getElementById("telaLogin");
+const cabecalho = document.querySelector("header");
+const menu = document.querySelector("nav");
+const principal = document.querySelector("main");
+const rodape = document.querySelector("footer");
+const mensagem = document.getElementById("mensagemLogin");
+
+document.getElementById("botaoEntrar").onclick = async function() {
+    try {
+        await signInWithEmailAndPassword(
+            auth,
+            document.getElementById("emailLogin").value.trim(),
+            document.getElementById("senhaLogin").value
+        );
+        mensagem.textContent = "Entrou com sucesso!";
+    } catch (erro) {
+        mensagem.textContent = "Erro ao entrar. Confira seu e-mail e senha.";
+    }
+};
+
+document.getElementById("botaoCriarConta").onclick = async function() {
+    try {
+        await createUserWithEmailAndPassword(
+            auth,
+            document.getElementById("emailLogin").value.trim(),
+            document.getElementById("senhaLogin").value
+        );
+        mensagem.textContent = "Conta criada com sucesso!";
+    } catch (erro) {
+        mensagem.textContent = "Erro ao criar conta. Use um e-mail válido e senha de pelo menos 6 caracteres.";
+    }
+};
+
+onAuthStateChanged(auth, function(usuario) {
+    const conectado = Boolean(usuario);
+    telaLogin.style.display = conectado ? "none" : "block";
+    cabecalho.style.display = conectado ? "" : "none";
+    menu.style.display = conectado ? "" : "none";
+    principal.style.display = conectado ? "" : "none";
+    rodape.style.display = conectado ? "" : "none";
+});
+import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+async function salvarDadosNaNuvem(usuario, dados) {
+if (!usuario) {
+throw new Error("Faça login antes de salvar.");
+}
+
+await setDoc(
+    doc(db, "users", usuario.uid, "appData", "state"),
+    dados,
+    { merge: true }
+);
+
+}
+
+async function carregarDadosDaNuvem(usuario) {
+if (!usuario) {
+throw new Error("Faça login antes de carregar.");
+}
+
+const referencia = doc(db, "users", usuario.uid, "appData", "state");
+const resultado = await getDoc(referencia);
+
+return resultado.exists() ? resultado.data() : null;
+
+}
+</script>
+<div id="telaLogin" style="display:none; max-width:420px; margin:40px auto; padding:20px; background:#0d2038; color:white; border-radius:15px;">
+    <h2 style="color:#38e0b5;">📚 NotaFácil</h2>
+    <h3 id="tituloAcesso">Entrar na conta</h3>
+
+    <label>E-mail</label>
+    <input id="emailLogin" type="email" placeholder="Seu e-mail">
+
+    <label>Senha</label>
+    <input id="senhaLogin" type="password" placeholder="Sua senha">
+
+    <button class="botao" id="botaoEntrar" type="button">Entrar</button>
+    <button class="botao secundario" id="botaoCriarConta" type="button">Criar conta</button>
+
+    <p id="mensagemLogin"></p>
+</div>
+</html>
+
+  
